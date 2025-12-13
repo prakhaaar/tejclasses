@@ -92,7 +92,7 @@ export async function POST(req: Request) {
     // Send the email
     await transporter.sendMail({
       from: `"Tej Classes Home Tutorial" <${process.env.EMAIL_USER}>`,
-      to: "tigeeks355@gmail.com", // change to your target Gmail
+      to: "tejclasseshometutorial@gmail.com", 
       subject: `📧 New Tutor Registration - ${data.fullName || "Untitled"}`,
       html,
       attachments,
