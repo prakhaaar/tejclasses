@@ -535,8 +535,7 @@ export default function TutorRegistrationForm() {
         <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-900 dark:border-emerald-900/40 dark:bg-emerald-950/40 dark:text-emerald-200">
           <p className="font-semibold">Thank you! 🎉</p>
           <p className="text-sm mt-1">
-            Your tutor registration has been captured on the client side. Hook
-            up the form action to your API to persist it.
+            Thank you for your registration. We will get back to you soon.
           </p>
         </div>
       )}
