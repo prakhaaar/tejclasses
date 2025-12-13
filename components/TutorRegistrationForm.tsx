@@ -519,12 +519,6 @@ export default function TutorRegistrationForm() {
         <div className="sticky bottom-4 z-10">
           <div className="mx-auto max-w-5xl rounded-2xl border border-gray-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-4 py-3 shadow-lg">
             <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                This form content is not created or endorsed by SurveyHeart ·{" "}
-                <a className="underline" href="#">
-                  Report Abuse
-                </a>
-              </p>
               <button
                 type="submit"
                 className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-600 to-fuchsia-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
