@@ -66,46 +66,117 @@ export default function TutorRegistrationForm() {
     setForm((f) => ({ ...f, [key]: value }));
     setErrors((e) => ({ ...e, [key as string]: "" }));
   };
+const validate = () => {
+  const e: Record<string, string> = {};
 
-  const validate = () => {
-    const e: Record<string, string> = {};
-    const emailRegex = /\S+@\S+\.\S+/;
-    const phoneRegex = /^[0-9+\-()\s]{8,}$/;
+  const emailRegex =
+    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/;
 
-    for (const key of requiredKeys) {
-      const v = (form as any)[key];
-      const isFilled = Array.isArray(v)
-        ? v.length > 0
-        : v instanceof File
-        ? !!v
-        : String(v ?? "").trim() !== "";
+  const phoneRegex = /^[6-9]\d{9}$/; // India mobile standard
 
-      if (!isFilled) e[key as string] = "This field is required.";
+  const nameRegex = /^[a-zA-Z\s]{3,}$/;
+
+  const currentYear = new Date().getFullYear();
+
+  // ---------- Required fields ----------
+  for (const key of requiredKeys) {
+    const v = (form as any)[key];
+    const filled = Array.isArray(v)
+      ? v.length > 0
+      : v instanceof File
+      ? !!v
+      : String(v ?? "").trim() !== "";
+
+    if (!filled) e[key] = "This field is required.";
+  }
+
+  // ---------- Full Name ----------
+  if (form.fullName && !nameRegex.test(form.fullName.trim())) {
+    e.fullName = "Name must contain only letters and be at least 3 characters.";
+  }
+
+  // ---------- DOB (Age >= 18) ----------
+  if (form.dob) {
+    const dob = new Date(form.dob);
+    const age =
+      (Date.now() - dob.getTime()) / (1000 * 60 * 60 * 24 * 365.25);
+
+    if (age < 18) {
+      e.dob = "Tutor must be at least 18 years old.";
     }
+  }
 
-    if (form.email && !emailRegex.test(form.email)) {
-      e.email = "Enter a valid email address.";
+  // ---------- Email ----------
+  if (form.email && !emailRegex.test(form.email)) {
+    e.email = "Enter a valid email address.";
+  }
+
+  // ---------- WhatsApp ----------
+  const cleanPhone = form.whatsapp.replace(/\D/g, "");
+  if (cleanPhone && !phoneRegex.test(cleanPhone)) {
+    e.whatsapp = "Enter a valid 10-digit Indian mobile number.";
+  }
+
+  // ---------- Year of Passing ----------
+  if (
+    form.yearIntermediate &&
+    (Number(form.yearIntermediate) < 1970 ||
+      Number(form.yearIntermediate) > currentYear)
+  ) {
+    e.yearIntermediate = `Year must be between 1970 and ${currentYear}.`;
+  }
+
+  // ---------- Teaching Experience ----------
+  if (form.experienceYears) {
+    const exp = Number(form.experienceYears);
+    if (exp < 0) e.experienceYears = "Experience cannot be negative.";
+  }
+
+  // ---------- Subjects ----------
+  if (form.subjects && form.subjects.trim().length < 5) {
+    e.subjects = "Please mention at least one subject properly.";
+  }
+
+  // ---------- Preferred Areas ----------
+  if (form.preferredAreas && form.preferredAreas.trim().length < 5) {
+    e.preferredAreas = "Please specify valid teaching areas.";
+  }
+
+  // ---------- Classes ----------
+  if (form.classes.length === 0) {
+    e.classes = "Select at least one class group.";
+  }
+
+  if (form.classes.includes("Other") && !form.classesOther.trim()) {
+    e.classesOther = "Please specify other class group.";
+  }
+
+  // ---------- File Validation ----------
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/jpg",
+    "application/pdf",
+  ];
+
+  const checkFile = (file?: File, field?: string) => {
+    if (!file) return;
+    if (file.size > MAX_FILE_SIZE) {
+      e[field!] = "File size must be under 50MB.";
     }
-    if (form.whatsapp && !phoneRegex.test(form.whatsapp)) {
-      e.whatsapp = "Enter a valid phone/WhatsApp number.";
+    if (!allowedTypes.includes(file.type)) {
+      e[field!] = "Only JPG, PNG or PDF files are allowed.";
     }
-
-    const checkSize = (file?: File, field?: string) => {
-      if (file && file.size > MAX_FILE_SIZE) {
-        e[field || "file"] = "File size exceeds 50MB.";
-      }
-    };
-    checkSize(form.photo, "photo");
-    checkSize(form.marksheet, "marksheet");
-    checkSize(form.idProof, "idProof");
-
-    if (form.classes.includes("Other") && !form.classesOther.trim()) {
-      e.classesOther = "Please specify other class group.";
-    }
-
-    setErrors(e);
-    return Object.keys(e).length === 0;
   };
+
+  checkFile(form.photo, "photo");
+  checkFile(form.marksheet, "marksheet");
+  checkFile(form.idProof, "idProof");
+
+  setErrors(e);
+  return Object.keys(e).length === 0;
+};
+
 
   // ----- Submit -----
   const onSubmit = async (e: React.FormEvent) => {
@@ -530,7 +601,7 @@ export default function TutorRegistrationForm() {
         </div>
       </form>
 
-      {/* Submit success message */}
+  
       {submitted && (
         <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-900 dark:border-emerald-900/40 dark:bg-emerald-950/40 dark:text-emerald-200">
           <p className="font-semibold">Thank you! 🎉</p>
@@ -540,7 +611,7 @@ export default function TutorRegistrationForm() {
         </div>
       )}
 
-      {/* Tiny print */}
+     
       <p className="mt-10 text-center text-xs text-gray-400">
         Answered {answeredCount} of 17
       </p>

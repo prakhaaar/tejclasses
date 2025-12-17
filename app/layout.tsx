@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Tej Classes",
   description: "Tej Classes Home Tutor Form",
+  
 };
 
 export default function RootLayout({
