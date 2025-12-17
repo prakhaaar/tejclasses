@@ -1,6 +1,10 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { motion, AnimatePresence } from "framer-motion";
+
 
 // Tailwind-only, no extra libs required
 // Drop this file into: app/components/TutorRegistrationForm.tsx (or /components in pages router)
@@ -31,6 +35,7 @@ export default function TutorRegistrationForm() {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
   const requiredKeys: (keyof typeof form)[] = [
@@ -179,11 +184,15 @@ const validate = () => {
 
 
   // ----- Submit -----
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const ok = validate();
-    if (!ok) return;
+const onSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
+  const ok = validate();
+  if (!ok) return;
+
+  setIsSubmitting(true); // 🔒 start loading
+
+  try {
     const fd = new FormData();
     Object.entries(form).forEach(([k, v]) => {
       if (v instanceof File) fd.append(k, v);
@@ -201,7 +210,13 @@ const validate = () => {
     } else {
       alert("❌ Failed to send email. Please try again.");
     }
-  };
+  } catch (err) {
+    alert("❌ Something went wrong.");
+  } finally {
+    setIsSubmitting(false); // 🔓 stop loading
+  }
+};
+
 
   // ----- UI Bits -----
   const label = (text: string, required = false) => (
@@ -232,44 +247,18 @@ const validate = () => {
     />
   );
 
-  const Header = () => (
-    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-purple-600 to-fuchsia-600 p-[1px] shadow-lg">
-      <div className="rounded-3xl bg-white dark:bg-slate-950 p-6 md:p-10">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-          <div>
-            <h1 className="text-2xl md:text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
-              Tej Classes Home Tutorial
-            </h1>
-            <p className="mt-2 text-gray-600 dark:text-gray-300 text-sm md:text-base">
-              Kindly fill required details to register as{" "}
-              <span className="font-semibold">Tutor</span>
-            </p>
-          </div>
-          <div className="min-w-[220px]">
-            <div className="rounded-xl bg-white/80 dark:bg-slate-900/80 p-4 ring-1 ring-black/5">
-              <p className="text-xs text-gray-500">Progress</p>
-              <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-slate-800">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-fuchsia-500 transition-all"
-                  style={{
-                    width: `${Math.round((answeredCount / 17) * 100)}%`,
-                  }}
-                />
-              </div>
-              <p className="mt-2 text-sm font-medium text-gray-800 dark:text-gray-100">
-                Answered {answeredCount} of 17
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
 
   return (
+    <>
+    <Header/>
+    
     <div className="mx-auto max-w-5xl px-4 py-8 md:py-12">
-      <Header />
-
+    
+     <div className="text-center mb-10">
+    <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100">
+      Register as a Tutor
+    </h1>
+    </div>
       <form onSubmit={onSubmit} className="mt-8 space-y-6">
         {/* Row 1 */}
         {box({
@@ -590,12 +579,40 @@ const validate = () => {
         <div className="sticky bottom-4 z-10">
           <div className="mx-auto max-w-5xl rounded-2xl border border-gray-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-4 py-3 shadow-lg">
             <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-              <button
-                type="submit"
-                className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-600 to-fuchsia-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
-              >
-                Submit Registration
-              </button>
+            <button
+  type="submit"
+  disabled={isSubmitting}
+  className="relative inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-600 to-fuchsia-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed"
+>
+  <AnimatePresence mode="wait">
+    {isSubmitting ? (
+      <motion.span
+        key="loading"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="flex items-center gap-2"
+      >
+        <motion.span
+          className="h-4 w-4 rounded-full border-2 border-white border-t-transparent"
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
+        />
+        Submitting…
+      </motion.span>
+    ) : (
+      <motion.span
+        key="text"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
+        Submit Registration
+      </motion.span>
+    )}
+  </AnimatePresence>
+</button>
+
             </div>
           </div>
         </div>
@@ -613,8 +630,11 @@ const validate = () => {
 
      
       <p className="mt-10 text-center text-xs text-gray-400">
-        Answered {answeredCount} of 17
+        Answered {answeredCount} of 16
       </p>
     </div>
+      <Footer/>
+    </>
+  
   );
 }
