@@ -22,7 +22,6 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log("🧾 [API] Student data:", { name, mobile });
 
     // ---------- Mail Transport ----------
     const transporter = nodemailer.createTransport({

@@ -29,6 +29,11 @@ export const metadata: Metadata = {
     "Home Tuition Lucknow",
     "Tutor Registration Lucknow",
     "Hire Home Tutor",
+    "Rajajipuram",
+    "alambagh",
+    "gomtinagar",
+    "dubbaga",
+    "indranagar",
   ],
 
   authors: [{ name: "Tej Classes Home Tutorial" }],
