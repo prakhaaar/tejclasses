@@ -27,7 +27,6 @@ export default function Header() {
             <span className="block text-lg font-bold text-gray-900">
               Tej Classes Home Tutorial
             </span>
-            <span className="block text-xs text-gray-600">📞 8887525956</span>
           </div>
         </Link>
 

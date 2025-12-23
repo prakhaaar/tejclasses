@@ -43,7 +43,7 @@ async function appendToGoogleSheet(data: Record<string, string>) {
   // Use Sheet1 (the actual sheet name visible in your Google Sheet)
   const res = await sheets.spreadsheets.values.append({
     spreadsheetId: process.env.GOOGLE_SHEET_ID!,
-    range: "Sheet1!A:A", // Explicitly use Sheet1
+    range: "'tutor'!A:O",
     valueInputOption: "USER_ENTERED",
     requestBody: { values },
   });
@@ -104,10 +104,16 @@ export async function POST(req: Request) {
         <p><b>Year (Intermediate):</b> ${data.yearIntermediate}</p>
         <p><b>Experience (Years):</b> ${data.experienceYears}</p>
         <p><b>Classes:</b> ${data.classes}</p>
-        ${data.classesOther ? `<p><b>Other Classes:</b> ${data.classesOther}</p>` : ''}
+        ${
+          data.classesOther
+            ? `<p><b>Other Classes:</b> ${data.classesOther}</p>`
+            : ""
+        }
         <p><b>Subjects:</b> ${data.subjects}</p>
         <p><b>Preferred Areas:</b> ${data.preferredAreas}</p>
-        ${data.referredBy ? `<p><b>Referred By:</b> ${data.referredBy}</p>` : ''}
+        ${
+          data.referredBy ? `<p><b>Referred By:</b> ${data.referredBy}</p>` : ""
+        }
       `,
       attachments,
     });

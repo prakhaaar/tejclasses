@@ -22,12 +22,12 @@ export default function Home() {
                 Most Affordable and Best Home Tutorial in Lucknow
               </h1>
 
-              <p className="mt-6 text-lg md:text-xl text-gray-600">
+              <p className="mt-6 text-lg md:text-xl text-gray-900">
                 <a
                   href="tel:+918887525956"
                   className="inline-block hover:text-green-500 transition"
                 >
-                  📞 +91 88875 25956
+                  Reach us here 📞 +91 88875 25956
                 </a>
               </p>
 
