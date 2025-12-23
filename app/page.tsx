@@ -51,7 +51,7 @@ export default function Home() {
             {/* RIGHT IMAGE */}
             <div className="relative w-full h-[320px] md:h-[420px]">
               <Image
-                src="/tejclasses.jpg   "
+                src="/tejclasses.png"
                 alt="Home tutor teaching student at Tej Classes"
                 fill
                 priority
