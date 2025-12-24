@@ -180,14 +180,11 @@ export default function TutorRegistrationForm() {
     return Object.keys(e).length === 0;
   };
 
-  // ----- Submit -----
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validate()) return;
 
-    const ok = validate();
-    if (!ok) return;
-
-    setIsSubmitting(true); // 🔒 start loading
+    setIsSubmitting(true);
 
     try {
       const fd = new FormData();
@@ -197,24 +194,32 @@ export default function TutorRegistrationForm() {
         else fd.append(k, String(v ?? ""));
       });
 
-      const res = await fetch("/api/send-email", {
-        method: "POST",
-        body: fd,
-      });
-      await fetch("/api/sendtotutor", {
+      // 1️⃣ Send admin mail
+      const adminRes = await fetch("/api/send-email", {
         method: "POST",
         body: fd,
       });
 
-      if (res.ok) {
-        setSubmitted(true);
-      } else {
-        alert("❌ Failed to send email. Please try again.");
+      if (!adminRes.ok) {
+        throw new Error("Admin email failed");
       }
+
+      // 2️⃣ Send tutor mail
+      const tutorRes = await fetch("/api/senttotutor", {
+        method: "POST",
+        body: fd,
+      });
+
+      if (!tutorRes.ok) {
+        throw new Error("Tutor email failed");
+      }
+
+      setSubmitted(true);
     } catch (err) {
-      alert("❌ Something went wrong.");
+      console.error(err);
+      alert("❌ Registration failed. Please try again.");
     } finally {
-      setIsSubmitting(false); // 🔓 stop loading
+      setIsSubmitting(false);
     }
   };
 
