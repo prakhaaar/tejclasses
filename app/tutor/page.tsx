@@ -35,8 +35,10 @@ export default function TutorRegistrationForm() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [useCompressed, setUseCompressed] = useState(true);
 
-  const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+  const MAX_FILE_SIZE = 4 * 1024 * 1024; // Vercel-safe
+
   const requiredKeys: (keyof typeof form)[] = [
     "fullName",
     "dob",
@@ -165,7 +167,7 @@ export default function TutorRegistrationForm() {
     const checkFile = (file?: File, field?: string) => {
       if (!file) return;
       if (file.size > MAX_FILE_SIZE) {
-        e[field!] = "File size must be under 50MB.";
+        e[field!] = "File size must be under 4MB.";
       }
       if (!allowedTypes.includes(file.type)) {
         e[field!] = "Only JPG, PNG or PDF files are allowed.";
@@ -225,7 +227,7 @@ export default function TutorRegistrationForm() {
 
   // ----- UI Bits -----
   const label = (text: string, required = false) => (
-    <label className="block text-sm font-medium text-gray-800 dark:text-gray-100">
+    <label className="block text-sm font-medium text-gray-800">
       {text}
       {required && <span className="ml-1 text-rose-600">*</span>}
     </label>
@@ -246,7 +248,7 @@ export default function TutorRegistrationForm() {
     <div
       {...props}
       className={
-        "rounded-2xl bg-white/70 dark:bg-slate-900/60 ring-1 ring-black/5 backdrop-blur p-4 md:p-6 shadow-sm " +
+        "rounded-2xl bg-white/70 ring-1 ring-black/5 backdrop-blur p-4 md:p-6 shadow-sm " +
         (props.className || "")
       }
     />
@@ -258,10 +260,10 @@ export default function TutorRegistrationForm() {
 
       <div className="mx-auto max-w-6xl px-4 py-14">
         <div className="text-center mb-14">
-          <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-gray-100">
+          <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 ">
             Register as a Tutor
           </h1>
-          <p className="mt-4 max-w-2xl mx-auto text-gray-600 dark:text-gray-400">
+          <p className="mt-4 max-w-2xl mx-auto text-gray-600 ">
             Join Tej Classes Home Tutorial and start teaching students across
             Lucknow. Fill in the details below your profile will be verified
             before approval.
@@ -280,7 +282,7 @@ export default function TutorRegistrationForm() {
                     value={form.fullName}
                     onChange={(e) => updateField("fullName", e.target.value)}
                     placeholder="Enter your full name"
-                    className="mt-2 w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="mt-2 w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                   {errorText("fullName")}
                 </div>
@@ -291,7 +293,7 @@ export default function TutorRegistrationForm() {
                     type="date"
                     value={form.dob}
                     onChange={(e) => updateField("dob", e.target.value)}
-                    className="mt-2 w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="mt-2 w-full rounded-xl border border-gray-300  bg-white px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                   {helper("dd-mm-yyyy")}
                   {errorText("dob")}
@@ -318,7 +320,7 @@ export default function TutorRegistrationForm() {
                           }
                           className="h-4 w-4"
                         />
-                        <span className="text-sm text-gray-800 dark:text-gray-100">
+                        <span className="text-sm text-gray-800 ">
                           {g.label}
                         </span>
                       </label>
@@ -334,7 +336,7 @@ export default function TutorRegistrationForm() {
                     value={form.email}
                     onChange={(e) => updateField("email", e.target.value)}
                     placeholder="you@example.com"
-                    className="mt-2 w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="mt-2 w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                   {errorText("email")}
                 </div>
@@ -354,7 +356,7 @@ export default function TutorRegistrationForm() {
                     value={form.whatsapp}
                     onChange={(e) => updateField("whatsapp", e.target.value)}
                     placeholder="e.g. +91 98765 43210"
-                    className="mt-2 w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="mt-2 w-full rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                   {errorText("whatsapp")}
                 </div>
@@ -366,7 +368,7 @@ export default function TutorRegistrationForm() {
                     onChange={(e) => updateField("address", e.target.value)}
                     rows={3}
                     placeholder="House No, Street, Area, City - Pincode"
-                    className="mt-2 w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="mt-2 w-full rounded-xl border border-gray-300  bg-white px-3 py-2 text-gray-900  focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                   {errorText("address")}
                 </div>
@@ -380,7 +382,7 @@ export default function TutorRegistrationForm() {
                     onChange={(e) => updateField("photo", e.target.files?.[0])}
                     className="mt-2 block w-full text-sm file:mr-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:font-medium file:text-indigo-700 hover:file:bg-indigo-100"
                   />
-                  {helper("Maximum allowed file size is 50MB.")}
+                  {helper("Maximum allowed file size is 4MB.")}
                   {errorText("photo")}
                 </div>
 
@@ -394,7 +396,7 @@ export default function TutorRegistrationForm() {
                     }
                     className="mt-2 block w-full text-sm file:mr-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:font-medium file:text-indigo-700 hover:file:bg-indigo-100"
                   />
-                  {helper("Maximum allowed file size is 50MB.")}
+                  {helper("Maximum allowed file size is 4MB.")}
                   {errorText("marksheet")}
                 </div>
 
@@ -408,7 +410,7 @@ export default function TutorRegistrationForm() {
                     }
                     className="mt-2 block w-full text-sm file:mr-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:font-medium file:text-indigo-700 hover:file:bg-indigo-100"
                   />
-                  {helper("Maximum allowed file size is 50MB.")}
+                  {helper("Maximum allowed file size is 4MB.")}
                   {errorText("idProof")}
                 </div>
               </>
@@ -427,7 +429,7 @@ export default function TutorRegistrationForm() {
                     onChange={(e) =>
                       updateField("qualification", e.target.value)
                     }
-                    className="mt-2 w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="mt-2 w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   >
                     <option value="" disabled>
                       Select your highest qualification
@@ -447,7 +449,7 @@ export default function TutorRegistrationForm() {
                   <select
                     value={form.board10}
                     onChange={(e) => updateField("board10", e.target.value)}
-                    className="mt-2 w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="mt-2 w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   >
                     <option value="" disabled>
                       Select your board
@@ -471,7 +473,7 @@ export default function TutorRegistrationForm() {
                       updateField("yearIntermediate", e.target.value)
                     }
                     placeholder="e.g. 2021"
-                    className="mt-2 w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="mt-2 w-full rounded-xl border border-gray-300  bg-white  px-3 py-2 text-gray-900  focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                   {errorText("yearIntermediate")}
                 </div>
@@ -487,7 +489,7 @@ export default function TutorRegistrationForm() {
                       updateField("experienceYears", e.target.value)
                     }
                     placeholder="e.g. 3"
-                    className="mt-2 w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="mt-2 w-full rounded-xl border border-gray-300 bg-white  px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                   {errorText("experienceYears")}
                 </div>
@@ -513,7 +515,7 @@ export default function TutorRegistrationForm() {
                     ].map((c) => (
                       <label
                         key={c}
-                        className="flex items-center gap-2 rounded-xl border border-gray-300 dark:border-slate-700 px-3 py-2 text-sm"
+                        className="flex items-center gap-2 rounded-xl border border-gray-300 px-3 py-2 text-sm"
                       >
                         <input
                           type="checkbox"
@@ -528,9 +530,7 @@ export default function TutorRegistrationForm() {
                             );
                           }}
                         />
-                        <span className="text-gray-800 dark:text-gray-100">
-                          {c}
-                        </span>
+                        <span className="text-gray-800">{c}</span>
                       </label>
                     ))}
                   </div>
@@ -542,7 +542,7 @@ export default function TutorRegistrationForm() {
                         updateField("classesOther", e.target.value)
                       }
                       placeholder="Please specify other class group"
-                      className="mt-3 w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="mt-3 w-full rounded-xl border border-gray-300  bg-white  px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   )}
                   {errorText("classes")}
@@ -556,7 +556,7 @@ export default function TutorRegistrationForm() {
                     onChange={(e) => updateField("subjects", e.target.value)}
                     rows={3}
                     placeholder="e.g. Mathematics, Physics, English"
-                    className="mt-2 w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="mt-2 w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                   {errorText("subjects")}
                 </div>
@@ -570,7 +570,7 @@ export default function TutorRegistrationForm() {
                     }
                     rows={3}
                     placeholder="e.g. Gomti Nagar, Indira Nagar, Aliganj"
-                    className="mt-2 w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="mt-2 w-full rounded-xl border border-gray-300  bg-white px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                   {errorText("preferredAreas")}
                 </div>
@@ -584,7 +584,7 @@ export default function TutorRegistrationForm() {
                     value={form.referredBy}
                     onChange={(e) => updateField("referredBy", e.target.value)}
                     placeholder="Name of referring tutor (optional)"
-                    className="mt-2 w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="mt-2 w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
               </>
@@ -593,7 +593,7 @@ export default function TutorRegistrationForm() {
 
           {/* Footer */}
           <div className="sticky bottom-6 z-20">
-            <div className="mx-auto max-w-5xl rounded-2xl border border-gray-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-4 py-3 shadow-lg">
+            <div className="mx-auto max-w-5xl rounded-2xl border border-gray-200 bg-white/90  backdrop-blur px-4 py-3 shadow-lg">
               <div className="flex flex-col md:flex-row items-center justify-between gap-3">
                 <button
                   type="submit"
@@ -638,7 +638,7 @@ export default function TutorRegistrationForm() {
         </form>
 
         {submitted && (
-          <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-900 dark:border-emerald-900/40 dark:bg-emerald-950/40 dark:text-emerald-200">
+          <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-900">
             <p className="font-semibold">Thank you! 🎉</p>
             <p className="text-sm mt-1">
               Your registration with <strong>Tej Classes Home Tutorial</strong>{" "}
