@@ -37,7 +37,7 @@ export default function TutorRegistrationForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [useCompressed, setUseCompressed] = useState(true);
 
-  const MAX_FILE_SIZE = 4 * 1024 * 1024; // Vercel-safe
+  const MAX_FILE_SIZE = 1 * 1024 * 1024; // Vercel-safe
 
   const requiredKeys: (keyof typeof form)[] = [
     "fullName",
@@ -167,7 +167,7 @@ export default function TutorRegistrationForm() {
     const checkFile = (file?: File, field?: string) => {
       if (!file) return;
       if (file.size > MAX_FILE_SIZE) {
-        e[field!] = "File size must be under 4MB.";
+        e[field!] = "File size must be under 1MB.";
       }
       if (!allowedTypes.includes(file.type)) {
         e[field!] = "Only JPG, PNG or PDF files are allowed.";
@@ -382,7 +382,7 @@ export default function TutorRegistrationForm() {
                     onChange={(e) => updateField("photo", e.target.files?.[0])}
                     className="mt-2 block w-full text-sm file:mr-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:font-medium file:text-indigo-700 hover:file:bg-indigo-100"
                   />
-                  {helper("Maximum allowed file size is 4MB.")}
+                  {helper("Maximum allowed file size is 1MB.")}
                   {errorText("photo")}
                 </div>
 
@@ -396,7 +396,7 @@ export default function TutorRegistrationForm() {
                     }
                     className="mt-2 block w-full text-sm file:mr-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:font-medium file:text-indigo-700 hover:file:bg-indigo-100"
                   />
-                  {helper("Maximum allowed file size is 4MB.")}
+                  {helper("Maximum allowed file size is 1MB.")}
                   {errorText("marksheet")}
                 </div>
 
@@ -410,7 +410,7 @@ export default function TutorRegistrationForm() {
                     }
                     className="mt-2 block w-full text-sm file:mr-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:font-medium file:text-indigo-700 hover:file:bg-indigo-100"
                   />
-                  {helper("Maximum allowed file size is 4MB.")}
+                  {helper("Maximum allowed file size is 1MB.")}
                   {errorText("idProof")}
                 </div>
               </>
